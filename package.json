@@ -21,5 +21,6 @@
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "react-app-rewired": "^1.2.9"
-  }
+  },
+  "homepage" : "https://zj-john.github.io/travelOrderShare"
 }
