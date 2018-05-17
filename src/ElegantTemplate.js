@@ -216,7 +216,10 @@ function template(canvas) {
 
   function download() {
     let a = document.createElement('a');
-    a.href = canvas.toDataURL('png');
+    a.href = canvas.toDataURL({
+        format: 'png',
+        quality: 1
+    });
     a.download = "template_elegant.png";
     a.click();
   }
