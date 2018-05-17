@@ -5,7 +5,7 @@ import bsxtImg from './img/bsxt.png';
 import airplaneImg from './img/airplane.png';
 import avatarImg from './img/avatar.png';
 import {fabric} from 'fabric-webpack';
-
+const FileSaver = require('file-saver');
 
 let images = {};
 function loadImage(url) {
@@ -215,13 +215,16 @@ function template(canvas) {
   }
 
   function download() {
-    let a = document.createElement('a');
-    a.href = canvas.toDataURL({
-        format: 'png',
-        quality: 1
+    canvas.getElement().toBlob(function(blob) {
+        FileSaver.saveAs(blob, "template_elegant.png");
     });
-    a.download = "template_elegant.png";
-    a.click();
+    // let a = document.createElement('a');
+    // a.href = canvas.toDataURL({
+    //     format: 'png',
+    //     quality: 1
+    // });
+    // a.download = "template_elegant.png";
+    // a.click();
   }
 
   return {
