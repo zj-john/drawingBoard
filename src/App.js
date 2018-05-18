@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import { NavBar, Button, Icon, SegmentedControl, WingBlank, NoticeBar, WhiteSpace, Popover, Modal, Toast } from 'antd-mobile';
 import styles from './App.css';
-import { saveIcon, shareIcon } from './svg.js';
-import NormalTemplate from './NormalTemplate.js';
-import FreshTemplate from './FreshTemplate.js';
-import ElegantTemplate from './ElegantTemplate.js';
-import editIcon from './img/edit.png';
+import ComicTemplate from './ComicTemplate.js';
+import DIYTemplate from './DIYTemplate.js';
+
+// icon
+import editIcon from './img/icon/edit.png';
+import demoIcon from './img/icon/template.png';
+import saveIcon from './img/icon/save.png';
 
 
-const myIcon = src => <img src={`${src}`} className="am-icon am-icon-xs" alt="" />;
+
 const Item = Popover.Item;
 const alert = Modal.alert;
+
+const myIcon = src => <img src={`${src}`} className="am-icon am-icon-xs" alt="" />;
 const showAlert = () => {
   const alertInstance = alert('Delete', 'Are you sure???', [
     { text: 'Cancel', onPress: () => console.log('cancel'), style: 'default' },
@@ -34,7 +38,7 @@ class App extends Component {
       visible: false,
       tabIndex: 0,
       status: 'edit', // save
-      noticeBarText: '选择模板，生成或分享行程'
+      noticeBarText: '选择一种风格，制作图片'
     };
   }
 
@@ -48,41 +52,32 @@ class App extends Component {
   // right button
   onSelect = (opt) => {
     let status = '';
-    console.log("onSelect");
     if (opt.props.value==='save') {
       status = 'save';
       let tabIndex = this.state.tabIndex,
           template;
       switch(tabIndex) {
         case 0:
-          template = 'normalTemplate';
-          this.refs["normalTemplate"].saveToImg(toastSaveSuccess);
+          template = 'ComicTemplate';
           break;
         case 1:
-          template = 'freshTemplate';
-          break;
-        case 2:
-          template = 'elegantTemplate';
-          this.refs["elegantTemplate"].saveToImg(toastSaveSuccess);
+          template = 'DIYTemplate';
           break;
       }
-      // this.refs[template].download();
+      this.refs[template].saveToImg(toastSaveSuccess);
 
     }
     if (opt.props.value==='edit') {
       status = 'edit';
-      // showAlert();
-
     }
     this.setState({
       visible: false,
       status: status,
-      noticeBarText: '不满意可重新编辑'
+      noticeBarText: '图片已生成，请长按保存'
     });
   };
 
   isShow = (index) => {
-    console.log("index", index);
     if (this.state.tabIndex=== index) return 'block';
     return 'none';
   }
@@ -90,22 +85,20 @@ class App extends Component {
 
   render() {
     return (
-      <div className={styles.App}>
+      <div>
         {/* 导航栏 */}
         <NavBar
           mode="light"
-          icon={<Icon type="left" />}
-          onLeftClick={() => console.log('onLeftClick.Need a back function')}
           rightContent={
             <Popover mask
-              overlayClassName="fortest"
               overlayStyle={{ color: 'currentColor' }}
               visible={this.state.visible}
               overlay={[
-                (<Item key="saveIcon" value="save" icon={ saveIcon() } disabled={this.state.status === 'save'}>生成图片</Item>),
+                (<Item key="saveIcon" value="save" icon={ myIcon(saveIcon) } disabled={this.state.status === 'save'}>生成图片</Item>),
                 (<Item key="editIcon" value="edit" icon={ myIcon(editIcon) } style={{ whiteSpace: 'nowrap' }} disabled={this.state.status === 'edit'}>
                   <span style={{ marginRight: 5 }}>编辑</span>
-                </Item>)
+                </Item>),
+                (<Item key="demo" value="demo" icon={ myIcon(demoIcon) } disabled>Demo</Item>)
               ]}
             align={{
               overflow: { adjustY: 0, adjustX: 0 },
@@ -125,10 +118,10 @@ class App extends Component {
             </div>
           </Popover>
         }
-        >分享</NavBar>
+        >绘画板</NavBar>
 
         {/* 通告栏 */}
-        <NoticeBar mode="closable">{ this.state.noticeBarText }</NoticeBar>
+        <NoticeBar style={{textAlign:"center"}}>{ this.state.noticeBarText }</NoticeBar>
 
         {/* 空白行 */}
         <WhiteSpace size="lg" />
@@ -136,10 +129,9 @@ class App extends Component {
         {/* 导航栏 */}
         <WingBlank>
           <SegmentedControl
-            values={['标准', '小清新', '高大上']}
+            values={['漫画', '自定义']}
             selectedIndex={ this.state.tabIndex }
             onChange={this.onChange}
-            onValueChange={this.onValueChange}
             disabled = {this.state.status==='save'}
           />
         </WingBlank>
@@ -149,21 +141,13 @@ class App extends Component {
 
         {/* 内容 */}
 
-
         <div style={{ display: this.isShow(0) }}>
-          <NormalTemplate ref="normalTemplate" status={this.state.status}  />
+          <ComicTemplate ref="ComicTemplate" status={this.state.status}  />
         </div>
 
-
-        <div style={{ display: this.isShow(1) }}>
-          <FreshTemplate ref="freshTemplate"  />
+        <div style={{ display: this.isShow(1) }} >
+          <DIYTemplate ref="DIYTemplate" status={this.state.status} />
         </div>
-
-        <div style={{ display: this.isShow(2) }} >
-          <ElegantTemplate ref="elegantTemplate" status={this.state.status} />
-        </div>
-
-
 
       </div>
     );
