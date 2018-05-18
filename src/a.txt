@@ -9,6 +9,11 @@
 </p>
 </div>:''
 
+
+isShow = (index) => {
+  if (this.state.tabIndex=== index) return 'block';
+  return 'hide';
+}
 {this.state.tabIndex===0 ?
   <NormalTemplate ref="normalTemplate"/ style={{display:this.isShow(0)}}>:''
 }

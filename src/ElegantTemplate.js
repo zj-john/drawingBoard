@@ -1,37 +1,11 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 import dfmzImg from './img/dfmz.png';
 import bsxtImg from './img/bsxt.png';
 import airplaneImg from './img/airplane.png';
 import avatarImg from './img/avatar.png';
+import gravelImg from './img/gravel.jpg';
 import {fabric} from 'fabric-webpack';
 const FileSaver = require('file-saver');
-
-let images = {};
-function loadImage(url) {
-    return new Promise((resolve, reject) => {
-        let img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = url;
-    });
-}
-
-function preLoadImg(imgNameList, cb){
-    let pr = [];
-    imgNameList.forEach(name => {
-        let p = loadImage(name)
-                .then(img => {
-                  images[name] = img;
-                })
-                .catch(err => console.log(err))
-        pr.push(p);
-    })
-
-    Promise.all(pr).then(() => {
-        cb(images);
-    });
-}
 
 function template(canvas) {
 
@@ -227,9 +201,22 @@ function template(canvas) {
     // a.click();
   }
 
+  function saveToImg(cb) {
+    const imgDom = document.getElementById("elegantImg");
+    imgDom.src = canvas.toDataURL('image/png');
+    imgDom.onload = function() {
+      cb();
+      // let a = document.createElement('a');
+      // a.href = imgDom.src;  //将画布内的信息导出为png图片数据
+      // a.download = "template_normal.png";  //设定下载名称
+      // a.click();
+    }
+  }
+
   return {
     "draw": draw,
-    "download": download
+    "download": download,
+    "saveToImg": saveToImg
   }
 }
 
@@ -254,13 +241,25 @@ class ElegantTemplate extends Component {
     template(this.canvas).download();
   }
 
+  saveToImg = (cb) => {
+    template(this.canvas).saveToImg(cb);
+  }
+
+  isShow = (status) => {
+    if (this.props.status === status) return 'block';
+    return 'none';
+  }
+
   render() {
     return (
       <div>
-        <canvas id="elegantTemplate" height='600'></canvas>
+        <div style={{ display: this.isShow('edit') }}>
+          <canvas id="elegantTemplate" height='600' />
+        </div>
         <input type="file" id="avatar" accept="image/gif,image/jpeg,image/jpg,image/png" style={{opacity:0,position:'absolute',top:0,left:0}} />
         <input type="file" id="fromScope" accept="image/gif,image/jpeg,image/jpg,image/png" style={{opacity:0,position:'absolute',top:0,left:0}} />
         <input type="file" id="toScope" accept="image/gif,image/jpeg,image/jpg,image/png" style={{opacity:0,position:'absolute',top:0,left:0}} />
+        <img id="elegantImg" style={{ display: this.isShow('save') }} height="600" width="100%"  />
       </div>
     );
   }

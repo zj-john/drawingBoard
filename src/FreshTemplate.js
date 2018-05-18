@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 import dfmzImg from './img/dfmz.png';
 import bsxtImg from './img/bsxt.png';
-import gravelImg from './gravel.jpg';
 import avatarImg from './img/avatar.png';
 
 let images = {};
@@ -44,7 +42,7 @@ function template() {
   }
 
   function draw() {
-    let imgNameList = [dfmzImg, bsxtImg, gravelImg, avatarImg];
+    let imgNameList = [dfmzImg, bsxtImg, avatarImg];
     preLoadImg(imgNameList, drawTrails);
   }
 
@@ -119,8 +117,7 @@ function template() {
       function doClick(event) {
         // console.log(event);
         let x = event.offsetX,
-            y = event.offsetY,
-            canvas = event.target;
+            y = event.offsetY;
         // console.log(contextList);
         if (isInPath(x,y,contextList["avatar"])) {
           console.log("avatar");

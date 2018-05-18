@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Icon } from 'antd-mobile';
-import gravelImg from './gravel.jpg';
+import gravelImg from './img/gravel.jpg';
 
 function loadImage(url) {
     return new Promise((resolve, reject) => {
@@ -30,13 +30,25 @@ function preLoadImg(imgNameList, cb){
 
 
 function template() {
-  let canvas = document.getElementById("normalTemplate");
+  const canvas = document.getElementById("normalTemplate");
 
   function download() {
     let a = document.createElement('a');
     a.href = canvas.toDataURL('image/png');  //将画布内的信息导出为png图片数据
     a.download = "template_normal.png";  //设定下载名称
     a.click(); //点击触发下载
+  }
+
+  function saveToImg(cb) {
+    const imgDom = document.getElementById("normalImg");
+    imgDom.src = canvas.toDataURL('image/png');
+    imgDom.onload = function() {
+      cb();
+      // let a = document.createElement('a');
+      // a.href = imgDom.src;  //将画布内的信息导出为png图片数据
+      // a.download = "template_normal.png";  //设定下载名称
+      // a.click();
+    }
   }
 
   function createCanopyPath(context) {
@@ -136,7 +148,8 @@ function template() {
 
   return {
     "draw": draw,
-    "download": download
+    "download": download,
+    "saveToImg": saveToImg
   }
 }
 
@@ -146,21 +159,33 @@ class NormalTemplate extends Component {
   }
 
   componentDidMount() {
-    let canvas = document.getElementById("normalTemplate");
-    if (canvas.width < window.innerWidth){
-      canvas.width  = window.innerWidth;
+    if ( this.props.status === 'edit') {
+      let canvas = document.getElementById("normalTemplate");
+      if (canvas.width < window.innerWidth){
+        canvas.width  = window.innerWidth;
+      }
+      template().draw();
     }
-    template().draw();
   }
 
   download = () => {
     template().download();
   }
 
+  saveToImg = (cb) => {
+    template().saveToImg(cb);
+  }
+
+  isShow = (status) => {
+    if (this.props.status === status) return 'block';
+    return 'none';
+  }
+
   render() {
     return (
       <div>
-        <canvas id="normalTemplate" style={{background:"white"}}  height="600"></canvas>
+          <canvas id="normalTemplate" height="600" style={{background: "white",display: this.isShow('edit')}} />
+          <img id="normalImg" style={{ display: this.isShow('save') }} height="600" width="100%" src={gravelImg}  />
       </div>
     );
   }
