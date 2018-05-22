@@ -28,3 +28,51 @@ isShow = (index) => {
 <NormalTemplate ref="normalTemplate" style={{display:this.isShow(0)}} />
 <FreshTemplate ref="freshTemplate" style={{display:this.isShow(1)}} />
 <ElegantTemplate ref="elegantTemplate" style={{display:this.isShow(2)}} />
+
+{/* 导航栏 */}
+<WingBlank>
+  <SegmentedControl
+    values={['四格漫画', '自定义']}
+    selectedIndex={ this.state.tabIndex }
+    onChange={this.onChange}
+    disabled = {this.state.status==='save'}
+  />
+</WingBlank>
+
+// tab change
+onChange = (e) => {
+  this.setState({
+    tabIndex: e.nativeEvent.selectedSegmentIndex
+  })
+}
+
+fabric.loadSVGFromURL(chatLeftSvg,function(objects, options){
+  let image = fabric.util.groupSVGElements(objects, options);
+  let height = 100,
+      _top = 60,
+      _left = 100;
+  image.scaleToHeight(height);
+  var currentProps = {
+      top: _top,
+      left: _left
+  };
+  image.set(currentProps);
+  //canvas.add(image);
+  let padding = 10,
+      fontSize = 12,
+      textAlign = 'center';
+
+  let currentProps1 = {
+      top: image.top + padding,
+      left: image.left + padding,
+      width: image.width * image.scaleX - 2 * padding - 5,
+      height: image.height * image.scaleY - 2 * padding - 5,
+      fontSize: fontSize,
+      fontWeight: 'bold',
+      textAlign: textAlign
+  };
+  // console.log(currentProps1);
+  let text = new fabric.Textbox("hello world", currentProps1);
+  // canvas.add(text);
+  let balloonGroup = new fabric.Group([image, text], {});
+  canvas.add(balloonGroup);

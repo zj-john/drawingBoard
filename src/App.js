@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { NavBar, Button, Icon, SegmentedControl, WingBlank, NoticeBar, WhiteSpace, Popover, Modal, Toast } from 'antd-mobile';
 import styles from './App.css';
-import ComicTemplate from './ComicTemplate.js';
 import DIYTemplate from './DIYTemplate.js';
 
 // icon
@@ -15,17 +14,17 @@ const Item = Popover.Item;
 const alert = Modal.alert;
 
 const myIcon = src => <img src={`${src}`} className="am-icon am-icon-xs" alt="" />;
-const showAlert = () => {
-  const alertInstance = alert('Delete', 'Are you sure???', [
-    { text: 'Cancel', onPress: () => console.log('cancel'), style: 'default' },
-    { text: 'OK', onPress: () => console.log('ok') },
-  ]);
-  setTimeout(() => {
-    // 可以调用close方法以在外部close
-    console.log('auto close');
-    alertInstance.close();
-  }, 500000);
-};
+// const showAlert = () => {
+//   const alertInstance = alert('Delete', 'Are you sure???', [
+//     { text: 'Cancel', onPress: () => console.log('cancel'), style: 'default' },
+//     { text: 'OK', onPress: () => console.log('ok') },
+//   ]);
+//   setTimeout(() => {
+//     // 可以调用close方法以在外部close
+//     console.log('auto close');
+//     alertInstance.close();
+//   }, 500000);
+// };
 
 const toastSaveSuccess = () => {
   Toast.success('图片生成成功，请长按保存', 1);
@@ -36,17 +35,10 @@ class App extends Component {
     super(props);
     this.state = {
       visible: false,
-      tabIndex: 0,
+      // tabIndex: 0,
       status: 'edit', // save
-      noticeBarText: '选择一种风格，制作图片'
+      noticeBarText: '选择主题，制作图片'
     };
-  }
-
-  // tab change
-  onChange = (e) => {
-    this.setState({
-      tabIndex: e.nativeEvent.selectedSegmentIndex
-    })
   }
 
   // right button
@@ -54,17 +46,18 @@ class App extends Component {
     let status = '';
     if (opt.props.value==='save') {
       status = 'save';
-      let tabIndex = this.state.tabIndex,
-          template;
-      switch(tabIndex) {
-        case 0:
-          template = 'ComicTemplate';
-          break;
-        case 1:
-          template = 'DIYTemplate';
-          break;
-      }
-      this.refs[template].saveToImg(toastSaveSuccess);
+      // let tabIndex = this.state.tabIndex,
+      //     template;
+      // switch(tabIndex) {
+      //   case 0:
+      //     template = 'ComicTemplate';
+      //     break;
+      //   case 1:
+      //     template = 'DIYTemplate';
+      //     break;
+      // }
+      // console.log(this.refs, template, this.refs[template]);
+      this.refs["DIYTemplate"].saveToImg(toastSaveSuccess);
 
     }
     if (opt.props.value==='edit') {
@@ -124,30 +117,12 @@ class App extends Component {
         <NoticeBar style={{textAlign:"center"}}>{ this.state.noticeBarText }</NoticeBar>
 
         {/* 空白行 */}
-        <WhiteSpace size="lg" />
-
-        {/* 导航栏 */}
-        <WingBlank>
-          <SegmentedControl
-            values={['漫画', '自定义']}
-            selectedIndex={ this.state.tabIndex }
-            onChange={this.onChange}
-            disabled = {this.state.status==='save'}
-          />
-        </WingBlank>
-
-        {/* 空白行 */}
         <WhiteSpace size="xs" />
 
         {/* 内容 */}
 
-        <div style={{ display: this.isShow(0) }}>
-          <ComicTemplate ref="ComicTemplate" status={this.state.status}  />
-        </div>
+        <DIYTemplate ref="DIYTemplate" status={this.state.status} />
 
-        <div style={{ display: this.isShow(1) }} >
-          <DIYTemplate ref="DIYTemplate" status={this.state.status} />
-        </div>
 
       </div>
     );
