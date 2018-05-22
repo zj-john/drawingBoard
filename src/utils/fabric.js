@@ -14,22 +14,22 @@ class Fabric {
     this.staticObjectList = [];
     this.selectedObjectList = [];
     this.canvas.on('mouse:down', function(options) {
-      console.log("mouse:down");
+      // console.log("mouse:down");
       // if (options.target) {
         // this.selectedObjectList.push(options.target);
       // }
     });
 
     this.canvas.on('selection:cleared', function(options) {
-      console.log("selection:cleared");
+      // console.log("selection:cleared");
     });
 
     this.canvas.on('selection:created', function(options) {
-      console.log("selection:created");
+      // console.log("selection:created");
     });
 
     this.canvas.on('selection:updated', function(options) {
-      console.log("selection:updated");
+      // console.log("selection:updated");
     });
   }
 
@@ -120,7 +120,8 @@ class Fabric {
       }
       oImg.set(options);
       // 长按
-      oImg.on('touch:longpress', function() {
+      oImg.on('mouseup', function() {
+        // console.log('mousedblclick');
         let fileInput = document.createElement("input");
         fileInput.type = "file",
         fileInput.accept ="image/gif,image/jpeg,image/jpg,image/png";
@@ -158,7 +159,7 @@ class Fabric {
     }
     let rect = new fabric.Rect(options);
     canvas.add(rect);
-    // canvas.setActiveObject(iText);
+    canvas.setActiveObject(rect);
   }
 
   addIText() {
@@ -299,6 +300,11 @@ class Fabric {
   enableFreeDrawing(flag) {
     const canvas = this.canvas;
     canvas.isDrawingMode = flag;
+  }
+  // 清空画板
+  clear() {
+    const canvas = this.canvas;
+    canvas.clear();
   }
   // 清空画板和事件
   dispose() {

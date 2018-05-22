@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Button, Toast, WingBlank, Picker, List, Switch  } from 'antd-mobile';
+import { Button, Toast, WingBlank, Picker, List, Switch, Modal  } from 'antd-mobile';
 import Fabric from './utils/fabric';
 import './index.css';
+const alert = Modal.alert;
 
 class DIYTemplate extends Component {
   constructor(props) {
@@ -53,13 +54,38 @@ class DIYTemplate extends Component {
           <Picker data={themeList} cols={1}
             value={this.state.themeValue}
             onOk={(v) => {
-              this.setState({ themeValue: v });
-              document.querySelectorAll(".List-item-btn .am-list-extra").forEach(function(dom) {
-                dom.style.flexBasis = "80%";
-              });
-              if(v[0]==='comic'){
-                this.Fabric.initComic();
+              const showAlert = () => {
+                const alertInstance = alert('更换模板吗', '更换模板将会清空画板', [
+                  { text: '取消', onPress: () => alertInstance.close(), style: 'default' },
+                  { text: '确认', onPress: () => {
+                    this.setState({ themeValue: v });
+                    document.querySelectorAll(".List-item-btn .am-list-extra").forEach(function(dom) {
+                      dom.style.flexBasis = "80%";
+                    });
+                    this.Fabric.clear();
+                    if(v[0]==='comic'){
+                      this.Fabric.initComic();
+                    }
+                  }},
+                ]);
+                // setTimeout(() => {
+                //   // 可以调用close方法以在外部close
+                //   console.log('auto close');
+                //   alertInstance.close();
+                // }, 500000);
+              };
+              if(this.state.themeValue.length===0) {
+                this.setState({ themeValue: v });
+                document.querySelectorAll(".List-item-btn .am-list-extra").forEach(function(dom) {
+                  dom.style.flexBasis = "80%";
+                });
+                if(v[0]==='comic'){
+                  this.Fabric.initComic();
+                }
+              } else {
+                showAlert();
               }
+
             }}>
             <List.Item arrow="horizontal">画板主题</List.Item>
           </Picker>
@@ -85,7 +111,7 @@ class DIYTemplate extends Component {
                  <Button type="ghost" inline size="small" style={{ marginRight: '4px' }} onClick={ () => this.Fabric.addRect('black') } disabled={this.state.enableFreeDrawing}>矩形</Button>
                  <Button type="ghost" inline size="small" style={{ marginRight: '4px' }} onClick={ () => this.Fabric.addIText() } disabled={this.state.enableFreeDrawing}>文字</Button>
                </div>
-             } className='List-item-btn'>添加组件</List.Item>
+             } className='List-item-btn'>添加</List.Item>
 
              <List.Item extra={
                <div>
@@ -93,7 +119,7 @@ class DIYTemplate extends Component {
                  <Button type="ghost" inline size="small" style={{ marginRight: '4px' }} onClick={ () => this.Fabric.enableStaticObject(false) } disabled={this.state.enableFreeDrawing}>解锁</Button>:
                  <Button type="ghost" inline size="small" style={{ marginRight: '4px' }} onClick={ () => this.Fabric.enableStaticObject(true) } disabled={this.state.enableFreeDrawing}>锁定</Button>
                </div>
-             } className='List-item-btn'>组件选项</List.Item>
+             } className='List-item-btn'>选项</List.Item>
           </List>
 
           <List
@@ -107,7 +133,7 @@ class DIYTemplate extends Component {
                  <Button type="ghost" inline size="small" style={{ marginRight: '4px' }} onClick={ () => this.Fabric.addLeftBalloon() }>左气泡</Button>
                  <Button type="ghost" inline size="small" style={{ marginRight: '4px' }} onClick={ () => this.Fabric.addRightBalloon() }>右气泡</Button>
                </div>
-             } className='List-item-btn'>添加组件</List.Item>
+             } className='List-item-btn'>添加</List.Item>
 
              <List.Item extra={
                <div>
@@ -115,24 +141,24 @@ class DIYTemplate extends Component {
                  <Button type="ghost" inline size="small" style={{ marginRight: '4px' }} onClick={ () => this.Fabric.enableStaticObject(false) } disabled={this.state.enableFreeDrawing}>解锁</Button>:
                  <Button type="ghost" inline size="small" style={{ marginRight: '4px' }} onClick={ () => this.Fabric.enableStaticObject(true) } disabled={this.state.enableFreeDrawing}>锁定</Button>
                </div>
-             } className='List-item-btn'>组件选项</List.Item>
+             } className='List-item-btn'>选项</List.Item>
           </List>
 
 
-        <div>
-          <List
-            renderHeader={() => '画板'}
-            style={{ display: this.isShow(this.props.status==='edit') }}
-          >
-            <canvas id="elegantTemplate" height='600' style={{"border":"1px solid #ddd"}}/>
-          </List>
-        </div>
+
+        <List
+          renderHeader={() => '画板'}
+          style={{ display: this.isShow(this.props.status==='edit') }}
+        >
+          <canvas id="elegantTemplate" height='450' style={{"border":"1px solid #ddd"}}/>
+        </List>
+
 
         <List
           renderHeader={() => '图片'}
           style={{ display: this.isShow(this.props.status==='save') }}
         >
-          <img id="elegantImg"  height="600" width="100%"  />
+          <img id="elegantImg"  height="400" width="100%"  />
         </List>
       </div>
     );

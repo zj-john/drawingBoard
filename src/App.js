@@ -14,17 +14,7 @@ const Item = Popover.Item;
 const alert = Modal.alert;
 
 const myIcon = src => <img src={`${src}`} className="am-icon am-icon-xs" alt="" />;
-// const showAlert = () => {
-//   const alertInstance = alert('Delete', 'Are you sure???', [
-//     { text: 'Cancel', onPress: () => console.log('cancel'), style: 'default' },
-//     { text: 'OK', onPress: () => console.log('ok') },
-//   ]);
-//   setTimeout(() => {
-//     // 可以调用close方法以在外部close
-//     console.log('auto close');
-//     alertInstance.close();
-//   }, 500000);
-// };
+
 
 const toastSaveSuccess = () => {
   Toast.success('图片生成成功，请长按保存', 1);
@@ -46,19 +36,7 @@ class App extends Component {
     let status = '';
     if (opt.props.value==='save') {
       status = 'save';
-      // let tabIndex = this.state.tabIndex,
-      //     template;
-      // switch(tabIndex) {
-      //   case 0:
-      //     template = 'ComicTemplate';
-      //     break;
-      //   case 1:
-      //     template = 'DIYTemplate';
-      //     break;
-      // }
-      // console.log(this.refs, template, this.refs[template]);
       this.refs["DIYTemplate"].saveToImg(toastSaveSuccess);
-
     }
     if (opt.props.value==='edit') {
       status = 'edit';
@@ -114,15 +92,10 @@ class App extends Component {
         >绘画板</NavBar>
 
         {/* 通告栏 */}
-        <NoticeBar style={{textAlign:"center"}}>{ this.state.noticeBarText }</NoticeBar>
-
-        {/* 空白行 */}
-        <WhiteSpace size="xs" />
+        <NoticeBar style={{textAlign:"center"}} mode="closable">{ this.state.noticeBarText }</NoticeBar>
 
         {/* 内容 */}
-
         <DIYTemplate ref="DIYTemplate" status={this.state.status} />
-
 
       </div>
     );
