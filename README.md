@@ -1,3 +1,3 @@
-## drawing boards
+## drawing board
 
-Drawing boards by fabric.js
+Drawing board by fabric.js
